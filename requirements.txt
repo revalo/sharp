@@ -1,1 +1,2 @@
-decorator==4.4.0
+flask
+jinja2
