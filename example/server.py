@@ -12,7 +12,7 @@ def repeat(name: str, times: int = 5):
     return {"repeated": name * times}
 
 
-@app.route('/')
+@app.route("/")
 def index():
     return render_template("index.html")
 

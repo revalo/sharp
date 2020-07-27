@@ -6,6 +6,8 @@ import inspect
 from sharp.error import error
 from sharp.codegen import codegen
 
+__version__ = "0.0.2"
+
 
 class Sharp(object):
     def __init__(self, flask_app, prefix=""):
