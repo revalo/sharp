@@ -29,6 +29,8 @@ Sharp can be combined with a modern frontend framework and any web asset bundler
 sharp.generate("src/js/sharp.gen.js")
 ```
 
+All Sharp messages are in plain JSON, producing human-readable messages and API routes.
+
 For a more fully fledged example, please see the `example/` directory.
 
 ## License
