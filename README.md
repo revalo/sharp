@@ -7,9 +7,6 @@ Sharp is an automatic API generation library for Python Flask and JavaScript. Yo
 Server-side code,
 
 ```python
-from flask import Flask
-from sharp import Sharp
-
 app = Flask(__name__)
 sharp = Sharp(app)
 
