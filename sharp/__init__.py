@@ -6,18 +6,34 @@ import inspect
 
 from sharp.error import error
 from sharp.codegen import codegen
+from sharp.function import Function
 
 __version__ = "0.0.3"
 
 
 class Sharp(object):
+    """Public sharp interface.
+    """
+
     def __init__(self, flask_app, prefix=""):
+        """Initialize a new Sharp object.
+
+        Args:
+            flask_app: The flask app object.
+            prefix (optional): Will be prefixed to all API routes. For instance, you can
+                choose to make this `/api` and all routes will start with `/api`.
+        """
+
         self.flask_app = flask_app
         self.prefix = prefix
         self.stubs = {}
 
     def function(self, route=None):
-        """Decorator for functions.
+        """Decorator for defining a new Sharp function.
+
+        Args:
+            route (optional): Expose this function at a specific API route, ignores the
+                prefix supplied in the `Sharp(prefix="/api")` constructor.
         """
 
         def decorator(f):
@@ -32,14 +48,11 @@ class Sharp(object):
         return decorator
 
     def generate(self, output_js_filename):
+        """Emit JavaScript API stubs to the supplied filename.
+        """
+
         with open(output_js_filename, "w") as f:
             f.write(codegen(list(self.stubs.values())))
-
-
-class Function(object):
-    def __init__(self, rule, f):
-        self.rule = rule
-        self.f = f
 
 
 def wrapper(f):
@@ -61,9 +74,7 @@ def wrapper(f):
 
                 if parameter.default != inspect.Parameter.empty:
                     # Optional parameter.
-                    value = payload.get(
-                        parameter.name, parameter.default
-                    )
+                    value = payload.get(parameter.name, parameter.default)
 
                     check_type(parameter.name, value, parameter.annotation)
                     new_kwargs[parameter.name] = value

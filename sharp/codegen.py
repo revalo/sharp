@@ -1,10 +1,12 @@
-"""Modules related to generting JavaScript stubs based on functions.
+"""Modules related to generating JavaScript stubs based on functions.
 """
 
 from jinja2 import Template
 import os
 import inspect
 
+
+# Load JS Jinja2 templates.
 JS_DIR = os.path.join(os.path.dirname(__file__), "js")
 
 with open(os.path.join(JS_DIR, "function.js")) as f:
@@ -15,6 +17,9 @@ with open(os.path.join(JS_DIR, "class.js")) as f:
 
 
 def gen_function(function):
+    """Generate JavaScript stub for a single function.
+    """
+
     signature = inspect.signature(function.f)
     parameters = [x for x in signature.parameters]
 
@@ -24,6 +29,8 @@ def gen_function(function):
 
 
 def codegen(functions):
-    functions = "\n\n".join(gen_function(f) for f in functions)
+    """Generate JavaScript for a list of functions and encapsulate in a static class.
+    """
 
+    functions = "\n\n".join(gen_function(f) for f in functions)
     return class_template.render(functions=functions)
