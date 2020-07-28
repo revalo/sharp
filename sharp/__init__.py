@@ -1,12 +1,13 @@
 from flask import request, jsonify
 from functools import wraps
+from typeguard import check_type
 
 import inspect
 
 from sharp.error import error
 from sharp.codegen import codegen
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 
 class Sharp(object):
@@ -54,19 +55,31 @@ def wrapper(f):
         new_args = []
         new_kwargs = {}
 
-        for name in signature.parameters:
-            parameter = signature.parameters[name]
+        try:
+            for name in signature.parameters:
+                parameter = signature.parameters[name]
 
-            if parameter.default != inspect.Parameter.empty:
-                new_kwargs[parameter.name] = payload.get(
-                    parameter.name, parameter.default
-                )
-            else:
-                if parameter.name not in payload:
-                    rv, code = error("Missing parameter %s." % (parameter.name))
-                    return jsonify(rv), code
+                if parameter.default != inspect.Parameter.empty:
+                    # Optional parameter.
+                    value = payload.get(
+                        parameter.name, parameter.default
+                    )
 
-                new_args.append(payload[parameter.name])
+                    check_type(parameter.name, value, parameter.annotation)
+                    new_kwargs[parameter.name] = value
+                else:
+                    # Required paramater.
+                    if parameter.name not in payload:
+                        rv, code = error("Missing parameter %s." % (parameter.name))
+                        return jsonify(rv), code
+
+                    value = payload[parameter.name]
+
+                    check_type(parameter.name, value, parameter.annotation)
+                    new_args.append(value)
+        except TypeError as e:
+            rv, code = error(str(e))
+            return jsonify(rv), code
 
         rv = f(*new_args, **new_kwargs)
         code = 200

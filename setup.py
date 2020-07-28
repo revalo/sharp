@@ -9,5 +9,5 @@ with open("sharp/__init__.py", encoding="utf8") as f:
 setup(
     name="Flask-Sharp",
     version=version,
-    install_requires=["Jinja2>=2.10.1"],
+    install_requires=["Jinja2>=2.10.1", "typeguard==2.9.1"],
 )
