@@ -1,6 +1,10 @@
 # Sharp
 
-Sharp is an automatic API generation library for Python Flask and JavaScript. You just define functions in the backend, and they are magically available to you on the frontend, with type checking built-in.
+Sharp is an automatic API generation library for Python Flask and JavaScript.
+
+You write functions in the backend, and Sharp generates the necessary JavaScript to make
+API calls to those functions. Sharp also validates argument types based on Python type
+hints.
 
 ## Install
 
@@ -8,7 +12,7 @@ Sharp is an automatic API generation library for Python Flask and JavaScript. Yo
 pip install Flask-Sharp
 ```
 
-## Example
+## Basic Example
 
 Server-side code,
 
