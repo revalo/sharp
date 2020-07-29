@@ -8,7 +8,7 @@ import { API } from  "./sharp.gen.js";
     button.onclick = () => {
         // Calls the server.
         API.repeat(name.value, 5).then((c) => {
-            result.innerText = c.repeated;
+            result.innerText = c;
         });
     }
 })();

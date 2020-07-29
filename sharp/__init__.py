@@ -98,6 +98,6 @@ def wrapper(f):
         if isinstance(rv, tuple):
             rv, code = rv
 
-        return jsonify(rv), code
+        return jsonify({"result": rv}), code
 
     return new_func

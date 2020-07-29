@@ -9,7 +9,7 @@ srp = Sharp(app, prefix="/api")
 
 @srp.function()
 def repeat(name: str, times: int = 5):
-    return {"repeated": name * times}
+    return name * times
 
 
 @app.route("/")

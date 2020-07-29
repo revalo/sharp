@@ -15,8 +15,13 @@ static {{ name }} (
                 {% endfor -%}
             }),
         }).then((r) => {
-            const data = r.json();
-            resolve(data);
+            r.json().then((data) => {
+                if ("error" in data) {
+                    reject(data.error);
+                    return;
+                }
+                resolve(data.result);
+            });
         }).catch((e) => {
             reject(e);
         })
