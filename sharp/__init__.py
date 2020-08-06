@@ -3,29 +3,33 @@ from functools import wraps
 from typeguard import check_type
 
 import inspect
+import sharp.naming
 
 from sharp.error import error
 from sharp.codegen import codegen
 from sharp.function import Function
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 
 class Sharp(object):
     """Public sharp interface.
     """
 
-    def __init__(self, flask_app, prefix=""):
+    def __init__(self, flask_app, prefix="", naming=sharp.naming.default):
         """Initialize a new Sharp object.
 
         Args:
             flask_app: The flask app object.
             prefix (optional): Will be prefixed to all API routes. For instance, you can
                 choose to make this `/api` and all routes will start with `/api`.
+            naming: A function that accepts (prefix, function) as parameters and decides
+                the route name. Check the `naming` directory for examples.
         """
 
         self.flask_app = flask_app
         self.prefix = prefix
+        self.naming = naming
         self.stubs = {}
 
     def function(self, route=None):
@@ -38,7 +42,9 @@ class Sharp(object):
 
         def decorator(f):
             if not route:
-                rule = self.prefix + "/" + f.__name__
+                rule = self.naming(self.prefix, f)
+            else:
+                rule = route
 
             self.stubs[f.__name__] = Function(rule, f)
 
@@ -47,12 +53,21 @@ class Sharp(object):
 
         return decorator
 
-    def generate(self, output_js_filename):
+    def generate(self, output_js_filename, verbose=True):
         """Emit JavaScript API stubs to the supplied filename.
         """
 
+        if verbose:
+            for k, v in self.stubs.items():
+                print(
+                    "[Sharp] Generating definitions for %s at route %s." % (k, v.rule)
+                )
+
         with open(output_js_filename, "w") as f:
             f.write(codegen(list(self.stubs.values())))
+
+        if verbose:
+            print("[Sharp] Done code generating client to %s" % (output_js_filename))
 
 
 def wrapper(f):

@@ -30,6 +30,12 @@ def gen_function(function):
 
 def codegen(functions):
     """Generate JavaScript for a list of functions and encapsulate in a static class.
+
+    Args:
+        functions: List of Sharp Function Metadata objects.
+
+    Returns:
+        String of generate client-side code.
     """
 
     functions = "\n\n".join(gen_function(f) for f in functions)

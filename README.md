@@ -27,11 +27,13 @@ def add(a: int, b: int):
     }
 ```
 
-And magically on your front-end,
+And your front-end JavaScript is automatically generated so you can just do,
 
 ```js
 const result = await API.add(4, 3);
 ```
+
+On the backend Sharp will automatically validate that both `a` and `b` parameters are valid `ints`.
 
 Sharp can be combined with a modern frontend framework and any web asset bundler, the code-gen is emmitted to a standalone JavaScript file,
 
@@ -42,6 +44,66 @@ sharp.generate("src/js/sharp.gen.js")
 All Sharp messages are in plain JSON, producing human-readable messages and API routes.
 
 For a more fully fledged example, please see the `example/` directory.
+
+## Naming Routes
+
+By default Sharp will try to name routes by combining the prefix with the function name.
+However, Sharp can also name routes based on filenames and any arbitrary custom naming
+function,
+
+```python
+from sharp import Sharp, naming
+
+srp = Sharp(app, prefix="/api", naming=naming.file_based)
+```
+
+In this example, Sharp will name a function names `add` in a file called `math.py`
+as `/api/math/add`.
+
+## Type Checking
+
+Sharp can verify basic Python type-hints and deal with default variables,
+
+```python
+@srp.function()
+def repeat(name: str, times: int = 5):
+    return name * times
+
+
+@srp.function()
+def reverse(names: List[str]):
+    return names[::-1]
+```
+
+## Errors
+
+If Sharp notices a missing parameter or a wrong type, it will generate a JSON response
+body `{"error": "Message"}` with a response code 400. To throw errors within a sharp
+function,
+
+```python
+from sharp.error import error
+
+@sharp.function()
+def add(a: int, b: int):
+    if a < 0:
+        return error("a cannot be negative.")
+
+    return {
+        "result": a + b,
+    }
+```
+
+All API calls from the client return a promise. Errors can be caught with a try-catch or
+a `catch` promise callback.
+
+```js
+API.add(-4, 3).then((r) => {
+    // r is the result of the function.
+}).catch((e) => {
+    // e is the error message.
+});
+```
 
 ## License
 
