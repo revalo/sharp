@@ -101,9 +101,7 @@ def add(a: int, b: int):
     if a < 0:
         return error("a cannot be negative.")
 
-    return {
-        "result": a + b,
-    }
+    return a + b
 ```
 
 All API calls from the client return a promise. Errors can be caught with a try-catch or
