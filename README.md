@@ -4,7 +4,21 @@ Sharp is an automatic API generation library for Python Flask and JavaScript.
 
 You write functions in the backend, and Sharp generates the necessary JavaScript to make
 API calls to those functions. Sharp also validates argument types based on Python type
-hints.
+hints,
+
+```python
+@sharp.function()
+def add(a: int, b: int):
+    return a + b
+
+sharp.generate("api.js")
+```
+
+Now `api.js` can be used from a JavaScript client,
+
+```js
+const result = await API.add(4, 3);
+```
 
 ## Install
 
@@ -22,24 +36,22 @@ sharp = Sharp(app)
 
 @sharp.function()
 def add(a: int, b: int):
-    return {
-        "result": a + b,
-    }
+    return a + b
 ```
-
-And your front-end JavaScript is automatically generated so you can just do,
-
-```js
-const result = await API.add(4, 3);
-```
-
-On the backend Sharp will automatically validate that both `a` and `b` parameters are valid `ints`.
 
 Sharp can be combined with a modern frontend framework and any web asset bundler, the code-gen is emmitted to a standalone JavaScript file,
 
 ```python
 sharp.generate("src/js/sharp.gen.js")
 ```
+
+And your front-end JavaScript is automatically generated and can be used as,
+
+```js
+const result = await API.add(4, 3);
+```
+
+On the backend Sharp will automatically validate that both `a` and `b` parameters are valid `ints`.
 
 All Sharp messages are in plain JSON, producing human-readable messages and API routes.
 
