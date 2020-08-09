@@ -9,7 +9,7 @@ export class Core {
                 body: JSON.stringify(body),
             }).then((r) => {
                 r.json().then((data) => {
-                    if ("error" in data.result) {
+                    if (data.result != null && "error" in data.result) {
                         reject(data.result.error);
                         return;
                     }
