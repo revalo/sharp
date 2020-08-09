@@ -9,7 +9,7 @@ from sharp.error import error
 from sharp.codegen import codegen
 from sharp.function import Function
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
 
 class Sharp(object):
