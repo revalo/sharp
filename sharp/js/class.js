@@ -1,7 +1,12 @@
+function makeURL(route) {
+    if (window.baseURL) return window.baseURL + route;
+    return route;
+}
+
 export class Core {
     static makeRequest(route, body) {
         return new Promise((resolve, reject) => {
-            fetch(route, {
+            fetch(makeURL(route), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
